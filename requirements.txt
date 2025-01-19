@@ -1,0 +1,11 @@
+Django==4.0
+djangorestframework==3.12
+rest_framework_simplejwt==5.0.0
+psycopg2==2.9.3
+PyPDF2==1.26.0
+langchain==0.0.42
+openai==0.10.0
+tiktoken==0.1.1
+django-redis==5.0.0
+celery==5.2.3
+redis==4.0.0
