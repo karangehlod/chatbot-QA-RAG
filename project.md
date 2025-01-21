@@ -24,7 +24,6 @@ Once a document is uploaded, extract the text.
 2. Embedding Generation
 Use OpenAI’s text-embedding-ada-002 or a similar embedding model to
 convert the cleaned text into vector representations (embeddings).
-Take-Home Challenge: Building a RAG-based Q&A Chatbot 1
 Break the extracted text into smaller chunks (e.g., sentences or paragraphs) to
 fit within token limits before generating embeddings.
 3. Vector Database
@@ -52,8 +51,5 @@ Ensure that when the containers are started, necessary migrations and
 database setup are automatically performed.
 Deliverables
 A fully functional web application that satisfies the above requirements.
-Take-Home Challenge: Building a RAG-based Q&A Chatbot 2
 A README.md file with instructions on how to set up and run the application
 using Docker.
-Once you have completed the project, please email your solution, including all
-necessary files and documentation, to abhishek@neuralityhealth.ai.

@@ -17,8 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from documents.views import QueryView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('documents.urls')),  # Include document API endpoints
-] 
+    path('api/query/', QueryView.as_view(), name='query'),  # Add this line
+]

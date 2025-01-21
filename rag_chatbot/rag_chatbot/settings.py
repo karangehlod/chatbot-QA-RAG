@@ -10,41 +10,62 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 # settings.py
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 import os
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # OpenAI API settings (you can replace this with Azure OpenAI if necessary)
-AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "your-openai-api-key")
-AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT", "your-openai-endpoint")
+# AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "your-openai-api-key")
+# AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT", "your-openai-endpoint")
+
+# Azure OpenAI Configuration for GPT Model
+AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "7HCLC1vIHAgtdibmDbMwzQFgCnlP6nXMmkbhW4x2bZLhHYCwxgYQJQQJ99BAAC4f1cMXJ3w3AAABACOGegPK")
+AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT", "https://dewa-ivfflat-ai.openai.azure.com/")
+AZURE_OPENAI_GPT_MODEL = os.getenv("AZURE_OPENAI_GPT_MODEL", "gpt-4o-mini-ivfflat")
+AZURE_OPENAI_GPT_VERSION = os.getenv("AZURE_OPENAI_GPT_VERSION", "2024-08-01-preview")
+
+# Azure OpenAI Configuration for Embedding Model
+AZURE_OPENAI_EMBEDDING_API_KEY = os.getenv("AZURE_OPENAI_EMBEDDING_API_KEY", "7HCLC1vIHAgtdibmDbMwzQFgCnlP6nXMmkbhW4x2bZLhHYCwxgYQJQQJ99BAAC4f1cMXJ3w3AAABACOGegPK")
+AZURE_OPENAI_EMBEDDING_ENDPOINT = os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT", "https://dewa-ivfflat-ai.openai.azure.com/")
+AZURE_OPENAI_EMBEDDING_MODEL = os.getenv("AZURE_OPENAI_EMBEDDING_MODEL", "text-embedding-ada-002")
+AZURE_OPENAI_EMBEDDING_VERSION = os.getenv("AZURE_OPENAI_EMBEDDING_VERSION", "2023-05-15")
 
 # Redis settings for caching
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://localhost:6379/1',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
 
 # PostgreSQL settings (with pgvector support)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'rag_chatbot',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rag_chatbot',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('POSTGRES_DB', 'rag_chatbot'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
+        'HOST': os.getenv('POSTGRES_HOST', 'db'),  # Use the service name 'db'
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
 
-# Celery configuration (assuming Redis is used for Celery)
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 #BASE_DIR = Path(__file__).resolve().parent.parent
@@ -71,6 +92,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'documents',  # Ensure this line is present
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -81,10 +104,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = "rag_chatbot.urls"
-
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -107,12 +134,16 @@ WSGI_APPLICATION = "rag_chatbot.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'rag_chatbot',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation

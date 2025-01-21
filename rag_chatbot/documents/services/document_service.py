@@ -4,6 +4,8 @@ from PyPDF2 import PdfReader
 from django.conf import settings
 import logging
 
+from documents.models import DocumentEmbeddings
+
 logger = logging.getLogger(__name__)
 
 class DocumentService:
@@ -15,7 +17,7 @@ class DocumentService:
         """
         Validates if the uploaded file is a PDF.
         """
-        if not file.name.endswith('.pdf'):
+        if not (file.name.endswith('.pdf') or file.name.endswith('.txt')):
             raise ValueError("Only PDF files are allowed.")
 
     def save_uploaded_file(self, file):
@@ -23,8 +25,9 @@ class DocumentService:
         Save the uploaded file to the server.
         """
         try:
-            # Save the file locally
-            file_path = os.path.join(settings.BASE_DIR, 'uploaded_files', file.name)
+            upload_dir = os.path.join(settings.BASE_DIR, 'uploaded_files')
+            os.makedirs(upload_dir, exist_ok=True)  # Ensure the directory exists
+            file_path = os.path.join(upload_dir, file.name)
             with open(file_path, 'wb') as f:
                 for chunk in file.chunks():
                     f.write(chunk)
@@ -56,3 +59,35 @@ class DocumentService:
         for i in range(0, text_length, chunk_size):
             chunks.append(text[i:i+chunk_size])
         return chunks
+    
+    def store_embeddings_in_db(self, chunks, embeddings):
+        """
+        Store the embeddings in the database.
+        """
+        for chunk, embedding in zip(chunks, embeddings):
+            # Assuming you have a model named DocumentEmbedding
+            DocumentEmbeddings.objects.create(
+                text=chunk,
+                embedding=embedding
+            )
+    
+    def chunk_text_for_token_limit(self, text, token_limit=512):
+            """
+            Chunk the text to handle token limits.
+            """
+            # This is a simple example. You might need to adjust the logic based on your tokenization requirements.
+            words = text.split()
+            chunks = []
+            current_chunk = []
+    
+            for word in words:
+                if len(current_chunk) + len(word) + 1 > token_limit:
+                    chunks.append(' '.join(current_chunk))
+                    current_chunk = [word]
+                else:
+                    current_chunk.append(word)
+    
+            if current_chunk:
+                chunks.append(' '.join(current_chunk))
+    
+            return chunks
