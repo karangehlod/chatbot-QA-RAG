@@ -1,0 +1,15 @@
+Django
+djangorestframework
+rest_framework_simplejwt
+psycopg2
+PyPDF2
+langchain
+openai
+tiktoken
+django-redis
+celery
+redis
+langchain-community
+pgvector
+langchain_openai
+numpy

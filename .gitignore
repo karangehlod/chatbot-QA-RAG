@@ -169,3 +169,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# add react files to exclude from git
+node_modules/
+build/
+dist/
+*.log
+*.lock
