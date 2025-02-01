@@ -151,8 +151,7 @@ Simple web application allowing users to upload content and receive answers base
 
 ## Authors
 
-- **Author Name**: [Your Name](https://github.com/your-github-username)
-- **Author Name**: [Collaborator Name](https://github.com/collaborator-github-username)
+- **Author Name**: [Karan Gehlod](https://github.com/karangehlod)
 
 ## License
 
